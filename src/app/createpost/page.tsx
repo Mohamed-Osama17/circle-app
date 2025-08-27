@@ -1,44 +1,39 @@
 'use client'
-import React, { FormEvent, useState } from "react";
-import { Card, CardContent, TextField, Button, Typography, Box, CircularProgress } from "@mui/material";
+import React, { FormEvent } from "react";
+import { Card, CardContent, TextField, Button, Typography, Box } from "@mui/material";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { useFormik } from 'formik';
-import { useDispatch, useSelector } from "react-redux";
-import { State, store } from "../_redux/store";
-import { setError, setLoading, setToken } from "../_redux/authSlice";
+import {  useSelector } from "react-redux";
+import { State } from "../_redux/store";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 
 export default function CreatePost() {
 
-    let { isLoading, error } = useSelector((store: State) => store.authReducer);
-    let router = useRouter()
+    const { isLoading, error } = useSelector((store: State) => store.authReducer);
+    const router = useRouter()
 
     async function handleSubmit(e: FormEvent<HTMLElement>) {
         e.preventDefault();
-        let form = e.target as HTMLFormElement
-        let formData = new FormData();
+        const form = e.target as HTMLFormElement
+        const formData = new FormData();
         formData.append('body', form.body.value);
         formData.append('image', form.image.files[0]);
 
-        let response = await fetch(`https://linked-posts.routemisr.com/posts`, {
+        const response = await fetch(`https://linked-posts.routemisr.com/posts`, {
             method: 'POST',
             body: formData,
             headers: {
                 'token': `${localStorage.getItem('token')}`
             }
         })
-        let data = await response.json();
+        const data = await response.json();
         if (response.ok) {
             toast.success('Post Added Successfully.');
             router.push('/profile');
         } else {
             toast.error(`Text field it can't be Empty`);
         }
-
-        console.log(data);
     }
 
 

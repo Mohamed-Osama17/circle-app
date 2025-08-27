@@ -12,9 +12,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../_redux/store';
 import { removeToken } from '../_redux/authSlice';
@@ -40,9 +39,9 @@ function Navbar() {
 
 
 
-    let token = useSelector((store: State) => store.authReducer.token);
-    let dispatch = useDispatch();
-    let router = useRouter();
+    const token = useSelector((store: State) => store.authReducer.token);
+    const dispatch = useDispatch();
+    const router = useRouter();
     function logOut() {
         handleCloseUserMenu();
         router.push('/login');

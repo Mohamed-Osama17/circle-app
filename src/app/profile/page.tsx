@@ -8,8 +8,8 @@ import Loading from "../loading";
 import PostDetails from "../_postDetails/page";
 
 export default function Profile() {
-    let { posts, loading } = useSelector((store: State) => store.postsReducer);
-    let dispatch = useDispatch<storeDispatch>();
+    const { posts, loading } = useSelector((store: State) => store.postsReducer);
+    const dispatch = useDispatch<storeDispatch>();
 
     // Extend the default JwtPayload to include your custom "user"
     interface CustomJwtPayload extends JwtPayload {

@@ -1,16 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Post } from "../interfaces";
-import toast from "react-hot-toast";
 
-let initialState = {
+const initialState = {
   loading: false as boolean,
   posts: [] as Post[],
   post: null as Post | null,
   error: null as any,
 };
 
-export let getPosts = createAsyncThunk("posts/getPosts", async () => {
-  let response = await fetch(
+export const getPosts = createAsyncThunk("posts/getPosts", async () => {
+  const response = await fetch(
     `https://linked-posts.routemisr.com/posts?limit=50`,
     {
       method: "GET",
@@ -20,14 +19,14 @@ export let getPosts = createAsyncThunk("posts/getPosts", async () => {
       },
     }
   );
-  let data = await response.json();
+  const data = await response.json();
   return data.posts;
 });
 
-export let getSinglePost = createAsyncThunk(
+export const getSinglePost = createAsyncThunk(
   "posts/getSinglePost",
   async (postId: string) => {
-    let response = await fetch(
+    const response = await fetch(
       `https://linked-posts.routemisr.com/posts/${postId}`,
       {
         method: "GET",
@@ -37,15 +36,15 @@ export let getSinglePost = createAsyncThunk(
         },
       }
     );
-    let data = await response.json();
+    const data = await response.json();
     return data.post;
   }
 );
 
-export let getUserPosts = createAsyncThunk(
+export const getUserPosts = createAsyncThunk(
   "posts/getUserPosts",
   async (userId: string) => {
-    let response = await fetch(
+    const response = await fetch(
       `https://linked-posts.routemisr.com/users/${userId}/posts`,
       {
         method: "GET",
@@ -55,12 +54,12 @@ export let getUserPosts = createAsyncThunk(
         },
       }
     );
-    let data = await response.json();
+    const data = await response.json();
     return data.posts;
   }
 );
 
-let postSlice = createSlice({
+const postSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {},
@@ -101,4 +100,4 @@ let postSlice = createSlice({
   },
 });
 
-export let postsReducer = postSlice.reducer;
+export const postsReducer = postSlice.reducer;

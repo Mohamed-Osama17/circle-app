@@ -9,9 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 export default function SinglePost() {
 
-    let { post, loading } = useSelector((store: State) => store.postsReducer);
-    let dispatch = useDispatch<storeDispatch>();
-    let { postId } = useParams()
+    const { post, loading } = useSelector((store: State) => store.postsReducer);
+    const dispatch = useDispatch<storeDispatch>();
+    const { postId } = useParams()
 
     useEffect(() => {
         dispatch(getSinglePost(`${postId}`));

@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 
 
 
-let initialState = {
+const initialState = {
   token: localStorage.getItem("token") as null | string,
   isLoading: false as boolean,
   error: null as null | string,
@@ -11,7 +11,7 @@ let initialState = {
 
 
 
-let authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
@@ -36,5 +36,5 @@ let authSlice = createSlice({
   },
 });
 
-export let authReducer = authSlice.reducer;
-export let { setLoading, setToken, setError, removeToken } = authSlice.actions;
+export const authReducer = authSlice.reducer;
+export const { setLoading, setToken, setError, removeToken } = authSlice.actions;

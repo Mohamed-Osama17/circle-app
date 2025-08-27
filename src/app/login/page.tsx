@@ -5,17 +5,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from "react-redux";
-import { State, store } from "../_redux/store";
+import { State } from "../_redux/store";
 import { setError, setLoading, setToken } from "../_redux/authSlice";
 import { useRouter } from "next/navigation";
 
 
 export default function Login() {
 
-    let { isLoading, error } = useSelector((store: State) => store.authReducer);
+    const { isLoading } = useSelector((store: State) => store.authReducer);
     const [isError, setisError] = useState(null as null | boolean)
-    let dispatch = useDispatch();
-    let router = useRouter();
+    const dispatch = useDispatch();
+    const router = useRouter();
 
     const handleLoginError = () => {
         setisError(true)
@@ -25,14 +25,14 @@ export default function Login() {
 
     async function handleLogin(values: { email: string, password: string }) {
         dispatch(setLoading())
-        let response = await fetch(`https://linked-posts.routemisr.com/users/signin`, {
+        const response = await fetch(`https://linked-posts.routemisr.com/users/signin`, {
             method: 'POST',
             body: JSON.stringify(values),
             headers: {
                 'Content-type': 'application/json',
             }
         })
-        let data = await response.json();
+        const data = await response.json();
 
         if (response.ok) {
             dispatch(setToken(data.token));

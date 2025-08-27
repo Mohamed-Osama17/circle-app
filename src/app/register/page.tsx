@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 export default function Register() {
   const [error, setError] = useState(null as null | boolean);
   const [loading, setLoading] = useState(false as boolean);
-  let router = useRouter();
+  const router = useRouter();
 
   const handleRegisterError = () => {
     setError(true);
@@ -29,14 +29,14 @@ export default function Register() {
 
   async function handleRegister(values: RegisterForm) {
     setLoading(true);
-    let response = await fetch(`https://linked-posts.routemisr.com/users/signup`, {
+    const response = await fetch(`https://linked-posts.routemisr.com/users/signup`, {
       method: "POST",
       body: JSON.stringify(values),
       headers: {
         'Content-Type': 'Application/json',
       }
     })
-    let data = await response.json();
+    const data = await response.json();
     if (response.ok) {
       setLoading(false);
       router.push('/login');
@@ -46,7 +46,6 @@ export default function Register() {
       setError(data.error);
       toast.error(data.error);
     }
-    console.log(data);
   }
 
 
