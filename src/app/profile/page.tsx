@@ -6,6 +6,7 @@ import { getUserPosts } from "../_redux/postsSlice";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import Loading from "../loading";
 import PostDetails from "../_postDetails/page";
+import { getLocalStorageItem } from "../utils/storage";
 
 export default function Profile() {
     const { posts, loading } = useSelector((store: State) => store.postsReducer);
@@ -16,7 +17,7 @@ export default function Profile() {
         user: string; // or an object if your user field is more complex
     }
 
-    const token = `${localStorage.getItem('token')}`;
+    const token = `${getLocalStorageItem("token")}`;
     // Decode with your custom type
     const { user } = jwtDecode<CustomJwtPayload>(token); // Returns with the JwtPayload type
 
