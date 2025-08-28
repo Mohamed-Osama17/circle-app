@@ -6,7 +6,6 @@ const isProd = process.env.NODE_ENV === "production";
 
 const config: NextConfig = {
   reactStrictMode: true,
-  output: "export", // enables static HTML export
   assetPrefix: isProd ? "/circle-app/" : "",
   basePath: isProd ? "/circle-app" : "",
   images: {
