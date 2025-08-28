@@ -1,31 +1,56 @@
 'use client'
-import { useDispatch, useSelector } from "react-redux"
-import { State, storeDispatch } from "../_redux/store"
-import { useEffect } from "react";
-import { getUserPosts } from "../_redux/postsSlice";
+
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import Loading from "../loading";
-import PostDetails from "../_postDetails/page";
+
+import { State, storeDispatch } from "../_redux/store";
+import { getUserPosts } from "../_redux/postsSlice";
 import { getLocalStorageItem } from "../utils/storage";
 
+import Loading from "../loading";
+import PostDetails from "../_postDetails/page";
+
+// Extend the default JwtPayload for custom claims
+interface CustomJwtPayload extends JwtPayload {
+    user: string;
+}
+
 export default function Profile() {
-    const { posts, loading } = useSelector((store: State) => store.postsReducer);
     const dispatch = useDispatch<storeDispatch>();
+    const { posts, loading } = useSelector((store: State) => store.postsReducer);
 
-    // Extend the default JwtPayload to include your custom "user"
-    interface CustomJwtPayload extends JwtPayload {
-        user: string; // or an object if your user field is more complex
-    }
+    // Safely decode token only once
+    const user = useMemo(() => {
+        const token = getLocalStorageItem("token");
+        if (!token) return null;
 
-    const token = `${getLocalStorageItem("token")}`;
-    // Decode with your custom type
-    const { user } = jwtDecode<CustomJwtPayload>(token); // Returns with the JwtPayload type
+        try {
+            const { user } = jwtDecode<CustomJwtPayload>(token);
+            return user;
+        } catch (err) {
+            console.error("Invalid token", err);
+            return null;
+        }
+    }, []);
 
+    // Fetch user posts when user is available
     useEffect(() => {
-        dispatch(getUserPosts(user));
-    }, [])
-    return <>
-        {loading ? <Loading /> : posts.toReversed().map((post) => <PostDetails key={post._id} post={post} isComments={true} />)}
-    </>
+        if (user) {
+            dispatch(getUserPosts(user));
+        }
+    }, [dispatch, user]);
 
+    if (loading) return <Loading />;
+
+    return (
+        <>
+            {posts
+                .slice() // clone array safely
+                .reverse()
+                .map((post) => (
+                    <PostDetails key={post._id} post={post} isComments />
+                ))}
+        </>
+    );
 }
