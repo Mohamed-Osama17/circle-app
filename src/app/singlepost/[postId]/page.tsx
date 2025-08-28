@@ -14,8 +14,10 @@ export default function SinglePost() {
     const { postId } = useParams()
 
     useEffect(() => {
-        dispatch(getSinglePost(`${postId}`));
-    }, [])
+        if (postId) {
+            dispatch(getSinglePost(postId as string));
+        }
+    }, [postId, dispatch]);
 
     return <>
         {loading ? <Loading /> : post && <PostDetails post={post} isComments={true} />}
