@@ -1,19 +1,22 @@
 'use client'
 import React, { FormEvent } from "react";
-import { Card, CardContent, TextField, Button, Typography, Box } from "@mui/material";
+import { Card, CardContent, TextField, Button, Typography, Box, CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
-import {  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { State } from "../_redux/store";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { setLoading } from "../_redux/authSlice";
 
 
 export default function CreatePost() {
 
     const { isLoading, error } = useSelector((store: State) => store.authReducer);
+    const dispatch = useDispatch();
     const router = useRouter()
 
     async function handleSubmit(e: FormEvent<HTMLElement>) {
+        dispatch(setLoading())
         e.preventDefault();
         const form = e.target as HTMLFormElement
         const formData = new FormData();
@@ -80,6 +83,7 @@ export default function CreatePost() {
                                 />
 
                                 <Button
+                                    disabled={isLoading == true}
                                     type="submit"
                                     variant="contained"
                                     color="primary"
@@ -96,7 +100,7 @@ export default function CreatePost() {
                                         },
                                     }}
                                 >
-                                    ADD
+                                    {isLoading ? <CircularProgress size="30px" /> : 'ADD'}
                                 </Button>
                             </CardContent>
                         </Card>
