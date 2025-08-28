@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Post } from "../interfaces";
 
-// Define a type for error
+// ----------------------
+// Types
+// ----------------------
 interface PostsError {
   message: string;
   status?: number;
@@ -21,7 +23,9 @@ const initialState: PostsState = {
   error: null,
 };
 
+// ----------------------
 // Thunks
+// ----------------------
 export const getPosts = createAsyncThunk<
   Post[],
   void,
@@ -48,8 +52,10 @@ export const getPosts = createAsyncThunk<
 
     const data = await response.json();
     return data.posts as Post[];
-  } catch (err: any) {
-    return rejectWithValue({ message: err.message ?? "Unknown error" });
+  } catch (err) {
+    return rejectWithValue({
+      message: err instanceof Error ? err.message : "Unknown error",
+    });
   }
 });
 
@@ -79,8 +85,10 @@ export const getSinglePost = createAsyncThunk<
 
     const data = await response.json();
     return data.post as Post;
-  } catch (err: any) {
-    return rejectWithValue({ message: err.message ?? "Unknown error" });
+  } catch (err) {
+    return rejectWithValue({
+      message: err instanceof Error ? err.message : "Unknown error",
+    });
   }
 });
 
@@ -110,11 +118,16 @@ export const getUserPosts = createAsyncThunk<
 
     const data = await response.json();
     return data.posts as Post[];
-  } catch (err: any) {
-    return rejectWithValue({ message: err.message ?? "Unknown error" });
+  } catch (err) {
+    return rejectWithValue({
+      message: err instanceof Error ? err.message : "Unknown error",
+    });
   }
 });
 
+// ----------------------
+// Slice
+// ----------------------
 const postSlice = createSlice({
   name: "posts",
   initialState,
@@ -130,10 +143,13 @@ const postSlice = createSlice({
         state.loading = false;
         state.posts = action.payload;
       })
-      .addCase(getPosts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload ?? { message: "Unknown error" };
-      })
+      .addCase(
+        getPosts.rejected,
+        (state, action: PayloadAction<PostsError | undefined>) => {
+          state.loading = false;
+          state.error = action.payload ?? { message: "Unknown error" };
+        }
+      )
       // getSinglePost
       .addCase(getSinglePost.pending, (state) => {
         state.loading = true;
@@ -146,10 +162,13 @@ const postSlice = createSlice({
           state.post = action.payload;
         }
       )
-      .addCase(getSinglePost.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload ?? { message: "Unknown error" };
-      })
+      .addCase(
+        getSinglePost.rejected,
+        (state, action: PayloadAction<PostsError | undefined>) => {
+          state.loading = false;
+          state.error = action.payload ?? { message: "Unknown error" };
+        }
+      )
       // getUserPosts
       .addCase(getUserPosts.pending, (state) => {
         state.loading = true;
@@ -162,10 +181,13 @@ const postSlice = createSlice({
           state.posts = action.payload;
         }
       )
-      .addCase(getUserPosts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload ?? { message: "Unknown error" };
-      });
+      .addCase(
+        getUserPosts.rejected,
+        (state, action: PayloadAction<PostsError | undefined>) => {
+          state.loading = false;
+          state.error = action.payload ?? { message: "Unknown error" };
+        }
+      );
   },
 });
 
