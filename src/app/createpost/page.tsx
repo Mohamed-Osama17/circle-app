@@ -32,6 +32,7 @@ export default function CreatePost() {
         })
         const data = await response.json();
         if (response.ok) {
+            console.log(data);
             toast.success('Post Added Successfully.');
             router.push('/profile');
         } else {
